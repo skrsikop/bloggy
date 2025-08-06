@@ -6,6 +6,14 @@ import mongoose from "mongoose";
 import main from "../configs/gemini.js";
 
 export const addBlog = async (req, res) => {
+
+  if (process.env.DEMO_MODE === "true") {
+    return res.status(403).json({
+      success: false,
+      message: "This is not allowed in demo",
+    });
+  }
+
   try {
     const { title, subTitle, description, category, isPublished } = JSON.parse(req.body.blog);
     const imageFile = req.file;
@@ -90,6 +98,14 @@ export const getBlogId = async (req, res) => {
 };
 
 export const deleteBlogById = async (req, res) => {
+
+  if (process.env.DEMO_MODE === "true") {
+    return res.status(403).json({
+      success: false,
+      message: "This is not allowed in demo",
+    });
+  }
+
   try {
     const { id } = req.body;
     if (!id || !mongoose.Types.ObjectId.isValid(id)) {
@@ -119,6 +135,14 @@ export const deleteBlogById = async (req, res) => {
 };
 
 export const togglePublish = async (req, res) => {
+
+  if (process.env.DEMO_MODE === "true") {
+    return res.status(403).json({
+      success: false,
+      message: "This is not allowed in demo",
+    });
+  }
+
   try {
     const { id } = req.body;
     const blog = await Blog.findById(id);
@@ -168,6 +192,14 @@ export const getBlogComments = async (req, res) => {
 };
 
 export const approveComment = async (req, res) => {
+  // Faallo: Hubi haddii DEMO_MODE=true, jooji oggolaanshaha faallooyinka demo mode-ka
+  if (process.env.DEMO_MODE === "true") {
+    return res.status(403).json({
+      success: false,
+      message: "This is not allowed in demo",
+    });
+  }
+
   try {
     const { commentId } = req.body;
     if (!commentId || !mongoose.Types.ObjectId.isValid(commentId)) {
@@ -197,6 +229,13 @@ export const approveComment = async (req, res) => {
 };
 
 export const deleteComment = async (req, res) => {
+  if (process.env.DEMO_MODE === "true") {
+    return res.status(403).json({
+      success: false,
+      message: "This is not allowed in demo",
+    });
+  }
+
   try {
     const { commentId } = req.body;
     if (!commentId || !mongoose.Types.ObjectId.isValid(commentId)) {
@@ -223,11 +262,10 @@ export const deleteComment = async (req, res) => {
   }
 };
 
-// generate content 
 export const generateContent = async (req, res) => {
   try {
-    const {prompt} = req.body;
-    const content = await main(prompt + 'Generate blog content for this topic  in simple text format');
+    const { prompt } = req.body;
+    const content = await main(prompt + 'Generate blog content for this topic in simple text format');
     res.json({ success: true, content });
   } catch (error) {
     res.json({

@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import mongoose from "mongoose"; // Added mongoose import
+import mongoose from "mongoose";
 import Blog from "../models/Blog.js";
 import Comment from "../models/Comment.js";
 
@@ -96,6 +96,14 @@ export const getDashboard = async (req, res) => {
 };
 
 export const deleteCommentById = async (req, res) => {
+  // Faallo: Hubi haddii DEMO_MODE=true, jooji tirtirista faallooyinka demo mode-ka
+  if (process.env.DEMO_MODE === "true") {
+    return res.status(403).json({
+      success: false,
+      message: "This is not allowed in demo",
+    });
+  }
+
   try {
     const { id } = req.body;
     if (!id || !mongoose.Types.ObjectId.isValid(id)) {
@@ -124,6 +132,14 @@ export const deleteCommentById = async (req, res) => {
 };
 
 export const approveCommentById = async (req, res) => {
+  // Faallo: Hubi haddii DEMO_MODE=true, jooji oggolaanshaha faallooyinka demo mode-ka
+  if (process.env.DEMO_MODE === "true") {
+    return res.status(403).json({
+      success: false,
+      message: "This is not allowed in demo",
+    });
+  }
+
   try {
     const { id } = req.body;
     if (!id || !mongoose.Types.ObjectId.isValid(id)) {
