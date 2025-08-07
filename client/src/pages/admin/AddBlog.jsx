@@ -46,7 +46,7 @@ const AddBlog = () => {
     });
 
     if (data.success) {
-      toast.success(data.message);
+      toast.error('adding blog is not allowed in demo');
       setTitle('');
       setSubTitle('');
       setCategory('Startup');
